@@ -55,3 +55,7 @@ for row in rows:
 
 # 変更をコミット
 conn.commit()
+
+# データベース接続を閉じる
+cursor.close()
+conn.close()
