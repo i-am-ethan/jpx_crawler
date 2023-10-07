@@ -2,6 +2,7 @@ version: '3.8'
 services:
   crawler_app:
     build: .
+    command: /start-cron.sh
     env_file:
       - ./.env
     volumes:
