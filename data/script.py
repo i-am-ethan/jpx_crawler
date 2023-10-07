@@ -13,6 +13,16 @@ db_name = os.environ.get('POSTGRES_DB')
 db_user = os.environ.get('POSTGRES_USER')
 db_password = os.environ.get('POSTGRES_PASSWORD')
 db_host = os.environ.get('POSTGRES_HOST')
+
+# PostgreSQLに接続
+conn = psycopg2.connect(
+    dbname=db_name,
+    user=db_user,
+    password=db_password,
+    host=db_host
+)
+cursor = conn.cursor()
+
 # JPXの新規上場企業ページからデータを取得
 target_url = "https://www.jpx.co.jp/listing/stocks/new/index.html"
 response = requests.get(target_url)
