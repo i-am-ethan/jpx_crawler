@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 import psycopg2
 from psycopg2 import sql
+import re  # 正規表現モジュールをインポート
 
 # JPXの新規上場企業ページからデータを取得
 target_url = "https://www.jpx.co.jp/listing/stocks/new/index.html"
