@@ -24,6 +24,9 @@ for row in rows:
 
     # 上場日の不要な部分を取り除く
     listing_date = re.sub(r'（.*?）', '', listing_date).strip()
+    # スラッシュをハイフンに置き換える
+    listing_date = listing_date.replace('/', '-')
+
     # 次の行（市場区分が含まれる行）を取得
     next_row = next(rows)
     second_columns = next_row.select('td')
