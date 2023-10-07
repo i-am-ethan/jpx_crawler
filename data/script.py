@@ -22,6 +22,8 @@ for row in rows:
     listing_date = first_columns[0].text.strip()
     company_name = first_columns[1].text.strip()
 
+    # 上場日の不要な部分を取り除く
+    listing_date = re.sub(r'（.*?）', '', listing_date).strip()
     # 次の行（市場区分が含まれる行）を取得
     next_row = next(rows)
     second_columns = next_row.select('td')
