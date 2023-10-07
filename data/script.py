@@ -41,6 +41,8 @@ for row in rows:
     listing_date = re.sub(r'（.*?）', '', listing_date).strip()
     # スラッシュをハイフンに置き換える
     listing_date = listing_date.replace('/', '-')
+    # 会社名から「代表者インタビュー」を取り除く
+    company_name = re.sub(r'代表者インタビュー', '', company_name).strip()
 
     # 次の行（市場区分が含まれる行）を取得
     next_row = next(rows)
