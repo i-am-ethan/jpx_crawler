@@ -52,3 +52,6 @@ for row in rows:
     # データベースに保存
     insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market) VALUES (%s, %s, %s)")
     cursor.execute(insert, (listing_date, company_name, market))
+
+# 変更をコミット
+conn.commit()
