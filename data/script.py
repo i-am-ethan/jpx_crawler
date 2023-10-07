@@ -8,6 +8,11 @@ import psycopg2
 from psycopg2 import sql
 import re  # 正規表現モジュールをインポート
 
+# 環境変数からDB設定を読み込む
+db_name = os.environ.get('POSTGRES_DB')
+db_user = os.environ.get('POSTGRES_USER')
+db_password = os.environ.get('POSTGRES_PASSWORD')
+db_host = os.environ.get('POSTGRES_HOST')
 # JPXの新規上場企業ページからデータを取得
 target_url = "https://www.jpx.co.jp/listing/stocks/new/index.html"
 response = requests.get(target_url)
