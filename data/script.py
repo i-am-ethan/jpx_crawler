@@ -48,3 +48,7 @@ for row in rows:
     market = second_columns[0].text.strip()
 
     print(f"上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+
+    # データベースに保存
+    insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market) VALUES (%s, %s, %s)")
+    cursor.execute(insert, (listing_date, company_name, market))
