@@ -52,7 +52,7 @@ for row in rows:
     print(f"上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
 
     # データベースに保存
-    insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market) VALUES (%s, %s, %s)")
+    insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market, created_at, updated_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
     cursor.execute(insert, (listing_date, company_name, market))
 
 # 変更をコミット
