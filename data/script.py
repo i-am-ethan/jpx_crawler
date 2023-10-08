@@ -23,6 +23,14 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
+# DBから最も新しい上場日(listing_date)を取得
+cursor.execute("SELECT MAX(listing_date) FROM companies")
+latest_date_in_db = cursor.fetchone()[0]
+
+# 最も新しいlisting_dateに対応するすべてのcompany_nameを取得
+cursor.execute("SELECT company_name FROM companies WHERE listing_date = %s", (latest_date_in_db,))
+existing_names = [row[0] for row in cursor.fetchall()]
+
 # JPXの新規上場企業ページからデータを取得
 target_url = "https://www.jpx.co.jp/listing/stocks/new/index.html"
 response = requests.get(target_url)
@@ -49,7 +57,16 @@ for row in rows:
     second_columns = next_row.select('td')
     market = second_columns[0].text.strip()
 
-    print(f"上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+    # 新しいデータとデータベース内の最新のデータを比較
+    if listing_date < latest_date_in_db:
+        print("Log:already_exists_data(1):最新のデータはありませんでした。")
+        continue
+    elif listing_date == latest_date_in_db:
+        if company_name in existing_names:
+            print("Log:already_exists_data(2):最新のデータはありませんでした。")
+            continue
+
+    print(f"データを保存しました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
 
     # データベースに保存
     insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market, created_at, updated_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
