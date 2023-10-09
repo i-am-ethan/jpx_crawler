@@ -56,6 +56,7 @@ for row in rows:
     first_columns = row.select('td')
     listing_date = first_columns[0].text.strip()
     company_name = first_columns[1].text.strip()
+    company_url = first_columns[1].find('a')['href'] if first_columns[1].find('a') else None
 
     # 上場日の不要な部分を取り除く
     listing_date = re.sub(r'（.*?）', '', listing_date).strip()
@@ -78,14 +79,14 @@ for row in rows:
             print("Log:already_exists_data(2):最新のデータはありませんでした。")
             continue
 
-    print(f"データを保存しました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+    print(f"データを保存しました。: 上場日: {listing_date}, 会社名: {company_name}, URL: {company_url}, 市場区分: {market}")
     new_data_added = True # 新しいデータが追加されたことを示すフラグを立てる
     # Slack通知を送信
-    send_slack_notification(f"データが追加されました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+    send_slack_notification(f"データが追加されました。: 上場日: {listing_date}, 会社名: {company_name}, URL: {company_url}, 市場区分: {market}")
 
     # データベースに保存
-    insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market, created_at, updated_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
-    cursor.execute(insert, (listing_date, company_name, market))
+    insert = sql.SQL("INSERT INTO companies (listing_date, company_name, company_url, market, created_at, updated_at) VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
+    cursor.execute(insert, (listing_date, company_name, company_url, market))
 
 # 変更をコミット
 conn.commit()
