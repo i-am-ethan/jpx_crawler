@@ -27,13 +27,17 @@ def send_slack_notification(message):
         print(f'Error: Slack notification failed: {response.text}')
 
 # PostgreSQLに接続
-conn = psycopg2.connect(
-    dbname=db_name,
-    user=db_user,
-    password=db_password,
-    host=db_host
-)
-cursor = conn.cursor()
+try:
+    conn = psycopg2.connect(
+        dbname=db_name,
+        user=db_user,
+        password=db_password,
+        host=db_host
+    )
+    cursor = conn.cursor()
+except Exception as e:
+    print(f"Database connection error: {e}")
+    sys.exit(1)  # スクリプトを終了
 
 # DBから最も新しい上場日(listing_date)を取得
 cursor.execute("SELECT MAX(listing_date) FROM companies")
