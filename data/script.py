@@ -3,6 +3,7 @@
 
 import os
 import requests
+import json
 from bs4 import BeautifulSoup
 import psycopg2
 from psycopg2 import sql
@@ -13,6 +14,14 @@ db_name = os.environ.get('POSTGRES_DB')
 db_user = os.environ.get('POSTGRES_USER')
 db_password = os.environ.get('POSTGRES_PASSWORD')
 db_host = os.environ.get('POSTGRES_HOST')
+
+def send_slack_notification(message):
+    webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
+    headers = {'Content-Type': 'application/json'}
+    data = {'text': message}
+    response = requests.post(webhook_url, headers=headers, data=json.dumps(data))
+    if response.status_code != 200:
+        print(f'Error: Slack notification failed: {response.text}')
 
 # PostgreSQLに接続
 conn = psycopg2.connect(
