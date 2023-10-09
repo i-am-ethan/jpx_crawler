@@ -35,6 +35,10 @@ try:
         host=db_host
     )
     cursor = conn.cursor()
+    if conn.status == psycopg2.extensions.STATUS_READY:
+        print("Database connection successful")
+    else:
+        print(f"Database connection error: {conn.status}")
 except Exception as e:
     print(f"Database connection error: {e}")
     sys.exit(1)  # スクリプトを終了
