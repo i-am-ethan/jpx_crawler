@@ -77,7 +77,7 @@ for row in rows:
 
     print(f"データを保存しました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
     # Slack通知を送信
-    send_slack_notification(f"新規上場情報: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+    send_slack_notification(f"データが追加されました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
 
     # データベースに保存
     insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market, created_at, updated_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
