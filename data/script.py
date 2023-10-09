@@ -71,7 +71,10 @@ for row in rows:
     market = second_columns[0].text.strip()
 
     # 新しいデータとデータベース内の最新のデータを比較
-    if listing_date < latest_date_in_db:
+    if latest_date_in_db is None:
+        print("Log:empty_database(0):テーブルにデータがありませんでした。")
+        pass
+    elif listing_date < latest_date_in_db:
         print("Log:already_exists_data(1):最新のデータはありませんでした。")
         continue
     elif listing_date == latest_date_in_db:
