@@ -9,6 +9,9 @@ import psycopg2
 from psycopg2 import sql
 import re  # 正規表現モジュールをインポート
 
+# 新しいデータが追加されたかどうかをトラッキングするフラグ
+new_data_added = False  
+
 # 環境変数からDB設定を読み込む
 db_name = os.environ.get('POSTGRES_DB')
 db_user = os.environ.get('POSTGRES_USER')
@@ -76,6 +79,7 @@ for row in rows:
             continue
 
     print(f"データを保存しました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+    new_data_added = True # 新しいデータが追加されたことを示すフラグを立てる
     # Slack通知を送信
     send_slack_notification(f"データが追加されました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
 
@@ -85,6 +89,10 @@ for row in rows:
 
 # 変更をコミット
 conn.commit()
+
+# 新しいデータが追加されていない場合にSlackに通知を送信
+if not new_data_added:
+    send_slack_notification("新しいデータの追加はありませんでした。")
 
 # データベース接続を閉じる
 cursor.close()
