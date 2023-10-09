@@ -3,16 +3,28 @@
 
 import os
 import requests
+import json
 from bs4 import BeautifulSoup
 import psycopg2
 from psycopg2 import sql
 import re  # 正規表現モジュールをインポート
+
+# 新しいデータが追加されたかどうかをトラッキングするフラグ
+new_data_added = False  
 
 # 環境変数からDB設定を読み込む
 db_name = os.environ.get('POSTGRES_DB')
 db_user = os.environ.get('POSTGRES_USER')
 db_password = os.environ.get('POSTGRES_PASSWORD')
 db_host = os.environ.get('POSTGRES_HOST')
+
+def send_slack_notification(message):
+    webhook_url = os.environ.get('SLACK_WEBHOOK_URL')
+    headers = {'Content-Type': 'application/json'}
+    data = {'text': message}
+    response = requests.post(webhook_url, headers=headers, data=json.dumps(data))
+    if response.status_code != 200:
+        print(f'Error: Slack notification failed: {response.text}')
 
 # PostgreSQLに接続
 conn = psycopg2.connect(
@@ -67,6 +79,9 @@ for row in rows:
             continue
 
     print(f"データを保存しました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
+    new_data_added = True # 新しいデータが追加されたことを示すフラグを立てる
+    # Slack通知を送信
+    send_slack_notification(f"データが追加されました。: 上場日: {listing_date}, 会社名: {company_name}, 市場区分: {market}")
 
     # データベースに保存
     insert = sql.SQL("INSERT INTO companies (listing_date, company_name, market, created_at, updated_at) VALUES (%s, %s, %s, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)")
@@ -74,6 +89,10 @@ for row in rows:
 
 # 変更をコミット
 conn.commit()
+
+# 新しいデータが追加されていない場合にSlackに通知を送信
+if not new_data_added:
+    send_slack_notification("新しいデータの追加はありませんでした。")
 
 # データベース接続を閉じる
 cursor.close()
