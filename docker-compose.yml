@@ -23,5 +23,7 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_HOST=${POSTGRES_HOST}
+    profiles:
+      - local
 volumes:
   postgres_data:
