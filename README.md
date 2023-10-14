@@ -11,12 +11,17 @@
 
 ## ローカル環境構築
 1. `.env`を管理者から取得し、ルートにおく。
-2. `docker-compose build`
+2. `docker compose build`
 3. `docker compose up -d`
 
 ## 本番
-1. `docker compose -f docker-compose.prod.yml build`
-2. `docker compose -f docker-compose.prod.yml up -d`
+1. `docker-compose -f docker-compose.prod.yml build`
+2. `docker-compose -f docker-compose.prod.yml up -d`
+3. `docker-compose -f docker-compose.prod.yml exec crawler_app bash`
+4. `docker-compose -f docker-compose.prod.yml ps`
+### 本番設定済みエイリアス
+`alias dcps='docker-compose -f docker-compose.prod.yml ps'`
+`alias dc='docker-compose -f docker-compose.prod.yml'`
 
 ## コンテナ内でcronを実行する方法
 1. crawler_appコンテナに接続します。
@@ -32,4 +37,13 @@
 ローカルのテストで削除したいときに使う。
 シーケンスも同時にリセットする。
 `TRUNCATE companies RESTART IDENTITY;`
+
+## 本番ソフトウェアVersion
+
+### docker
+`docker --version`
+Docker version 20.10.23, build 7155243
+### docker-compose
+`docker-compose --version`
+Docker Compose version v2.22.0
 
