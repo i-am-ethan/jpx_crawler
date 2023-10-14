@@ -33,6 +33,11 @@
 <small>※pythonのパスに気をつけて下さい。
 コンテナ内で`which python3`を実行して出力されたパスにして下さい。</small>
 
+## 本番でcronを実行する
+`crontab -e`
+`* * * * * env POSTGRES_DB=sample POSTGRES_USER=sample POSTGRES_PASSWORD=sample POSTGRES_HOST=sample SLACK_WEBHOOK_URL=sample /usr/local/bin/python3 /app/data/script.py >> /app/data/logfile.log 2>> /app/data/error.log
+`
+
 ## テーブルデータ削除
 ローカルのテストで削除したいときに使う。
 シーケンスも同時にリセットする。
