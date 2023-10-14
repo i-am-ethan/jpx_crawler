@@ -66,12 +66,14 @@ for row in rows:
     company_name = first_columns[1].text.strip()
     company_url = first_columns[1].find('a')['href'] if first_columns[1].find('a') else None
 
-    # 上場日の不要な部分を取り除く
-    listing_date = re.sub(r'（.*?）', '', listing_date).strip()
-    # スラッシュをハイフンに置き換える
-    listing_date = listing_date.replace('/', '-')
-    # 会社名から「代表者インタビュー」を取り除く
-    company_name = re.sub(r'代表者インタビュー', '', company_name).strip()
+    # 上場日の取得
+    listing_date_text = first_columns[0].text.strip()
+    listing_date_match = re.search(r'(\d{4}/\d{2}/\d{2})', listing_date_text)
+    if listing_date_match:
+        listing_date = listing_date_match.group(1).replace('/', '-')
+    else:
+        print(f"正規表現エラー(上場日):開発者に連絡して下さい: {listing_date_text}")
+        continue  # マッチしなかった場合、ループの次のイテレーションに進みます
 
     # 次の行（市場区分が含まれる行）を取得
     next_row = next(rows)
