@@ -11,8 +11,8 @@
 
 ## ローカル環境構築
 1. `.env`を管理者から取得し、ルートにおく。
-2. `docker compose build`
-3. `docker compose up -d`
+2. `docker-compose --profile local build`
+3. `docker compose --profile local up -d`
 
 ## コンテナ内でcronを実行する方法
 1. crawler_appコンテナに接続します。
