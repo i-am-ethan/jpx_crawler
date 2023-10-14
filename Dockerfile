@@ -2,7 +2,7 @@
 FROM python:3.9
 
 # OSパッケージの更新、cron、vimのインストール
-RUN apt-get update && apt-get install -y cron vim
+RUN apt-get update && apt-get install -y cron vim postgresql-client
 
 # 作業ディレクトリを設定
 WORKDIR /app
